@@ -1,0 +1,195 @@
+---
+title: "M01-2-Introduction to Literate Programming-Application Assignment"
+author: "Luis Berumen"
+date: '`r format(Sys.time())`'
+format: 
+  html: 
+    toc: true
+    toc-depth: 4
+    number-sections: true
+    code-line-numbers: true
+    code-fold: false
+    code-link: true
+    embed-resources: true
+editor: visual
+execute: 
+  freeze: auto
+  warning: false
+---
+
+# Module 1-2 Application Assignment
+
+This codebook practices basic R coding, variables, vectors, packages, and visualization using Quarto.
+
+## Ex 1. Create a variable called X
+
+> Create a variable called `X` and assign the text `"This is my first assignment"` to it.
+
+::: callout-tip
+Use `<-` to assign a value to a variable.
+:::
+
+```{r}
+X <- "This is my first assignment"
+X # Print X 
+```
+
+## Ex 2. Adding texts in Base R
+
+Since this exercise has two parts, I use subheadings to organize the work.
+
+### Ex 2.1. Practice using `paste()` and `paste0()`
+
+> Look up the `paste()` function from help and practice some examples.
+
+::: callout-tip
+The `paste()` function combines text and usually inserts a space by default. The `paste0()` function combines text without adding spaces.
+:::
+
+```{r}
+?paste # Open the help document for paste
+```
+
+```{r}
+paste("Hello", "world")
+paste("A", "B", "C", sep = "-")
+paste0("A", "B", "C")
+paste("Today is", Sys.Date())
+```
+### Ex 2.2. Add text to `X`
+
+> Using `paste()`, add `"and I'm loving it!"` to `X`.
+
+```{r}
+X <- paste(X, "and I'm loving it!") # Add more text to the existing variable X
+X # Print X to confirm the change
+```
+
+## Ex 3. Create and modify a vector called Y
+
+> Create a vector called `Y` with the numbers 2, 3, 4, and 5. Next, multiply the vector by 2 and save it as `Y` again.
+
+::: callout-important
+Because `Y` is overwritten, it is important to print `Y` afterward to confirm that the new values are correct.
+:::
+
+```{r}
+Y <- c(2, 3, 4, 5) # Create a numeric vector
+Y <- Y * 2 # Multiply every number in Y by 2 and save it again as Y
+Y # Print Y to confirm the operation worked
+```
+
+## Ex 4. Print X and Y
+
+> Print both the variable `X` and the vector `Y`.
+
+```{r}
+X # Print the text variable
+Y # Print the numeric vector
+```
+
+## Ex 5. Show the maximum and minimum of Y
+
+> Show the maximum and minimum value of the vector `Y`.
+
+```{r}
+max(Y) # Find the maximum value of Y
+min(Y) # Find the minimum value of Y
+```
+
+## Ex 6. Load `ggplot2` and view `economics`
+
+> Load up the `ggplot2` package and take a look at the first six rows of the data called `economics`.
+
+::: callout-tip
+If `ggplot2` has already been installed, the `install.packages("ggplot2")` line does not need to be run again.
+:::
+
+```{r}
+# Install ggplot2 only if needed
+# install.packages("ggplot2")
+
+library(ggplot2) # Load ggplot2
+head(economics) # View the first six rows of the economics data set
+```
+
+## Ex 7. Understand `economics` and draw a chart
+
+> Use the `economics` data from the `ggplot2` package. Define the six variables, pick two related variables, and create a chart using `ggplot2`.
+
+The `economics` data set includes the following variables:
+
+- **date**: Month of data collection.
+- **pce**: Personal consumption expenditures, in billions of dollars.
+- **pop**: Total population, in thousands.
+- **psavert**: Personal savings rate.
+- **uempmed**: Median duration of unemployment, in weeks.
+- **unemploy**: Number of unemployed people, in thousands.
+
+I chose *unemployment* and *median duration of unemployment* because they are logically related. When unemployment is high, the median duration of unemployment may also change.
+
+```{r}
+# Create a basic ggplot object and save it as plot
+plot <- ggplot(
+  data = economics,
+  mapping = aes(x = unemploy, y = uempmed)
+) +
+  geom_point()
+
+# Print the plot object with labels added
+plot +
+  labs(
+    title = "Unemployment and Median Duration of Unemployment",
+    x = "Number of Unemployed People, in Thousands",
+    y = "Median Duration of Unemployment, in Weeks"
+  )
+```
+
+## Ex 8. Replicate the chart using a pipe
+
+> Replicate the chart above using a pipe operator and without saving the initial plot as a plot object. Add a label and caption so the figure can be cross-referenced.
+
+```{r}
+#| label: fig-unemployment-duration
+#| fig-cap: "Relationship between the number of unemployed people and the median duration of unemployment."
+#| fig-width: 5
+#| fig-asp: 0.6
+
+economics |>
+  ggplot(mapping = aes(x = unemploy, y = uempmed)) +
+  geom_point() +
+  labs(
+    title = "Unemployment and Median Duration of Unemployment",
+    x = "Number of Unemployed People, in Thousands",
+    y = "Median Duration of Unemployment, in Weeks"
+  )
+```
+## Ex 9. Describe findings using a callout block
+
+> Using one of the callout blocks, describe your findings and use cross-referencing to refer to the figure created earlier.
+
+::: callout-note
+In @fig-unemployment-duration, the scatter plot shows the relationship between the number of unemployed people and the median duration of unemployment. The general pattern suggests that when the number of unemployed people is higher, the median duration of unemployment also tends to be higher. This makes sense because difficult labor market conditions may cause people to remain unemployed for longer periods of time.
+:::
+
+## Ex 10. Organization and Quarto tools used
+
+> Make sure the codebook is well organized, easy to navigate, and visually effective. Explicitly state what tools were used.
+
+For this report, I used the following Quarto and Markdown tools:
+
+1.  Section numbering using `#`, `##`, and `###`.
+2.  **Bold font** for important terms.
+3.  *Italicized font* for emphasis.
+4.  `callout-tip` blocks for hints.
+5.  `callout-note` blocks for explanations and findings.
+6.  `callout-important` blocks for important reminders.
+7.  Blockquotes using `>` for every task.
+8.  Backticks around functions and objects such as `paste()`, `ggplot()`, `X`, and `Y`.
+9.  Cross-referencing with @fig-unemployment-duration.
+10. Optional chunk arguments using `#|` to control the figure label, caption, width, and aspect ratio.
+11. Table of Contents through YAML header.
+
+::: callout-important
+This document is designed to be self-sufficient, meaning the questions, notes, code, and results are all included in one file.
+:::
